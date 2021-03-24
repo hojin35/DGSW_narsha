@@ -26,9 +26,11 @@ unsigned long curr_micros = 0;
 unsigned long pre_micros_x = 0;
 unsigned long pre_micros_y = 0;
 
+bool x_stopped = 0;
+bool y_stopped = 0;
 
 bool motor_stop_x = 0;
-bool motor_stop_y = 0;
+bool motor_stop_y = 1;
 
 
 bool step_toggle_x = 0;
@@ -43,6 +45,7 @@ int pre_millis_y = 0;
 unsigned int step_count_x = 0;
 unsigned int step_count_y = 0;
 
+int cnt = 0;
 void loop() {
 
 
@@ -66,6 +69,8 @@ void loop() {
         if (step_count_x > 4000) {
           step_count_x = 0;
           motor_stop_x = 1;
+
+          x_stopped = 1;
         }
       }
     }
@@ -83,9 +88,11 @@ void loop() {
       }
       else if (step_toggle_y == 1) {
         step_count_y++;
-        if(step_count_y > 4000){
-          step_count_y =0;
+        if (step_count_y > 4000) {
+          step_count_y = 0;
           motor_stop_y = 1;
+
+          y_stopped = 1;
         }
         step_toggle_y = 0;
         digitalWrite(Y_STEP, LOW);
@@ -97,6 +104,22 @@ void loop() {
   }
   //--------------------------------------------
 
+  if (x_stopped == 1 && motor_stop_y == 1&&cnt == 0) {
+    motor_stop_y = 0;
+    step_count_y = 0;
+  }
+  else if (x_stopped == 1 && y_stopped == 1 && cnt == 0) {
+
+    digitalWrite(X_DIR, LOW);
+    digitalWrite(Y_DIR, LOW);
+    motor_stop_x = 0;
+    step_count_x = 0;
+
+    motor_stop_y = 0;
+    step_count_y = 0;
+
+    cnt = 1;
+  }
 
 
   //if(curr_millis - pre_millis_x >1000){
@@ -113,19 +136,19 @@ void loop() {
   //  }
   //}
   //----------------------------------------------
-//  if (curr_millis - pre_millis_y > 1000) {
-//
-//    pre_millis_y = curr_millis;
-//
-//    if (dir_toggle_y == 0) {
-//      dir_toggle_y = 1;
-//      digitalWrite(Y_DIR, LOW);
-//    }
-//    else if (dir_toggle_y == 1) {
-//      dir_toggle_y = 0;
-//      digitalWrite(Y_DIR, HIGH);
-//    }
-//  }
+  //  if (curr_millis - pre_millis_y > 1000) {
+  //
+  //    pre_millis_y = curr_millis;
+  //
+  //    if (dir_toggle_y == 0) {
+  //      dir_toggle_y = 1;
+  //      digitalWrite(Y_DIR, LOW);
+  //    }
+  //    else if (dir_toggle_y == 1) {
+  //      dir_toggle_y = 0;
+  //      digitalWrite(Y_DIR, HIGH);
+  //    }
+  //  }
 
   //--------------------------------------------
   int in_value_x = digitalRead(X_STOP);
