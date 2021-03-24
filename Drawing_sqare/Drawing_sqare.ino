@@ -4,6 +4,7 @@
 #define Y_DIR 23
 #define Y_STEP 22
 
+int len;
 void setup() {
   // put your setup code here, to run once:
   //X-DIR = PC 5번 아두이노 번호 21번
@@ -13,6 +14,7 @@ void setup() {
   //XYEENABLE = PD 6번 아두이노 번호 14번
   // 원하는 길이(mm) / 0.0125
 
+  Serial.begin(9600);
   pinMode(X_DIR,OUTPUT);
   pinMode(X_STEP,OUTPUT);
   pinMode(X_EN,OUTPUT);
@@ -24,16 +26,16 @@ void setup() {
   digitalWrite(X_EN,LOW);
 }
 
-void X_Move(){
-  for(int i=0;i<4000;i++){
+void X_Move(int len){
+  for(int i=0;i<len;i++){
   digitalWrite(X_STEP,HIGH);
   delayMicroseconds(200);
   digitalWrite(X_STEP,LOW);
   delayMicroseconds(200);
   }
 }
-void Y_Move(){
-  for(int i=0;i<4000;i++){
+void Y_Move(int len){
+  for(int i=0;i<len;i++){
   digitalWrite(Y_STEP,HIGH);
   delayMicroseconds(200);
   digitalWrite(Y_STEP,LOW);
@@ -41,15 +43,20 @@ void Y_Move(){
   }
 }
 
+
+
 void loop() {
-  // put your main code here, to run repeatedly:
+  len = Serial.parseInt();
+  len*=80;
+  Serial.println(len);
+ 
   digitalWrite(X_DIR, HIGH);
-  X_Move();
-  digitalWrite(Y_DIR,HIGH);
-  Y_Move();
-  digitalWrite(X_DIR, LOW);
-  X_Move();
+  X_Move(len);
   digitalWrite(Y_DIR,LOW);
-  Y_Move();
+  Y_Move(len);
+  digitalWrite(X_DIR, LOW);
+  X_Move(len);
+  digitalWrite(Y_DIR,HIGH);
+  Y_Move(len);
   delay(6000);
 }
