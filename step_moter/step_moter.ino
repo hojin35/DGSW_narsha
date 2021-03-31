@@ -66,7 +66,7 @@ void loop() {
         digitalWrite(X_STEP, LOW);
 
         step_count_x++;
-        if (step_count_x > 4000) {
+        if (step_count_x > 3200) {
           step_count_x = 0;
           motor_stop_x = 1;
 
@@ -79,7 +79,7 @@ void loop() {
     }
   }
   //--------------------------------------------
-  if (curr_micros - pre_micros_y > 200) {
+  if (curr_micros - pre_micros_y > 400) {
     pre_micros_y = curr_micros;
     if (motor_stop_y == 0) {
       if (step_toggle_y == 0) {
@@ -88,7 +88,7 @@ void loop() {
       }
       else if (step_toggle_y == 1) {
         step_count_y++;
-        if (step_count_y > 4000) {
+        if (step_count_y > 1600) {
           step_count_y = 0;
           motor_stop_y = 1;
 
