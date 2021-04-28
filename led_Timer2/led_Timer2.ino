@@ -31,10 +31,10 @@ SIGNAL(TIMER2_OVF_vect) {
   count++;
   if (count == 100) {
     count = 0;
-    PORTH |= (0x01 << 4); //led7번 on
+    PORTH |= (0x01 << 4); //led13번 on
   }
   else if (count == pwm_duty) {
-    PORTH &= ~(0x01 << 4); //led7번 off
+    PORTH &= ~(0x01 << 4); //led13번 off
   }
 }
 
